@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+require('./config/passport')(passport);
+
 connectDB();
 
 app.use(cors(corsOptions));

@@ -1,9 +1,10 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import useAuth from '../hooks/useAuth';
 
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -12,6 +13,8 @@ import { Button } from "../components/ui/button";
 const Login = () => {
     const userInputRef = useRef();
     const errRef = useRef();
+    const { setAuth} = useAuth();
+    const location = useLocation();
 
     const [userInput, setUserInput] = useState("");
     const [pwd, setPwd] = useState("");
@@ -51,7 +54,7 @@ const Login = () => {
             console.log(JSON.stringify(response?.data));
         } catch (err) {
             if (err?.response?.status === 403) {
-                navigate("/");
+                navigate("/profile");
                 return;
             }
             console.error(err);
@@ -59,6 +62,24 @@ const Login = () => {
             toast.error("Error logging in. Please try again.");
         }
     };
+
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                await axios.get("http://localhost:5555/login", {
+                    withCredentials: true,
+                });
+            } catch (err) {
+                if (err?.response?.status === 403) {
+                    navigate("/profile");
+                }
+            }
+        };
+        
+        if(location.pathname.includes('/login') || location.pathname.includes('/profile')){
+            checkAuthStatus();
+        }
+    }, [location.pathname]);
 
     return (
         <div className="flex flex-col justify-center items-center min-h-screen p-4 bg-white font-sans text-black text-lg">
