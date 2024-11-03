@@ -22,7 +22,7 @@ const Header = () => {
     return (
         <div className="w-full flex justify-between items-center bg-black text-white text-lg px-6">
             <nav className="flex justify-center gap-6 py-4">
-                <h1 className="font-bold">DailyBlend</h1>
+                <Link to="/" className="font-bold">DailyBlend</Link>
                 <Link className="px-2 hover:underline decoration-2" to="/">
                     Home
                 </Link>
