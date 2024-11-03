@@ -35,7 +35,7 @@ const Login = () => {
         console.log("Submitting form");
         try {
             const response = await axios.post(
-                "http://localhost:5555/login",
+                "http://localhost:3333/login",
                 {
                     identifier: userInput,
                     password: pwd,
@@ -66,7 +66,7 @@ const Login = () => {
     useEffect(() => {
         const checkAuthStatus = async () => {
             try {
-                await axios.get("http://localhost:5555/login", {
+                await axios.get("http://localhost:3333/login", {
                     withCredentials: true,
                 });
             } catch (err) {

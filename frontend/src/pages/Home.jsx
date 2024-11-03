@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const Home = () => {
     return (
         <div>
-            <Link to="/register">Register</Link>
-            <Link to="/login">Login</Link>
+            <h1 className="flex justify-center mt-48 text-[4rem]">
+                Welcome to the DailyBlend
+            </h1>
         </div>
     );
 };

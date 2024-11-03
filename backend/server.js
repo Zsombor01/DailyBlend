@@ -34,6 +34,8 @@ app.use(passport.session());
 app.use('/register', require('./routes/register.js'));
 app.use('/login', require('./routes/login.js'));
 app.use('/logout', require('./routes/logout.js'));
+app.use('/auth', require('./routes/authStatus.js'));
+
 
 
 app.get('/', (req, res) => {
