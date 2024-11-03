@@ -30,6 +30,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/register', require('./routes/register.js'));
+app.use('/login', require('./routes/login.js'));
+app.use('/logout', require('./routes/logout.js'));
+
 
 app.get('/', (req, res) => {
     res.send('API is running...');
