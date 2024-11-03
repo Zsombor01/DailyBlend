@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Layout from "./components/Layout";
-
+import Unauthorized from "./pages/errors/Unauthorized";
 
 function App() {
     return (
@@ -14,6 +14,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
             </Route>
         </Routes>
     );

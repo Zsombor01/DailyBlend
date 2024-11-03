@@ -6,6 +6,7 @@ const session = require('express-session');
 const connectDB = require('./config/connectDB');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
+const { forwardAuthenticated, ensureAuthenticated } = require('./config/auth.js');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -32,9 +33,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/register', require('./routes/register.js'));
-app.use('/login', require('./routes/login.js'));
-app.use('/logout', require('./routes/logout.js'));
-app.use('/auth', require('./routes/authStatus.js'));
+app.use('/login', forwardAuthenticated, require('./routes/login.js'));
+app.use('/logout', ensureAuthenticated, require('./routes/logout.js'));
+app.use('/auth', ensureAuthenticated, require('./routes/authStatus.js'));
 
 
 
