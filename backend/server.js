@@ -36,6 +36,7 @@ app.use('/register', require('./routes/register.js'));
 app.use('/login', forwardAuthenticated, require('./routes/login.js'));
 app.use('/logout', ensureAuthenticated, require('./routes/logout.js'));
 app.use('/auth', ensureAuthenticated, require('./routes/authStatus.js'));
+app.use('/profile', ensureAuthenticated, require('./routes/profile.js'));
 
 
 
