@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
+import getUserData from "../hooks/getUserData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Profile = () => {
@@ -16,6 +17,15 @@ const Profile = () => {
         setAuth({loggedIn: false});
         navigate("/login");
     };
+
+    useEffect(() => {
+        const getProfileData = async () => {
+            const status = await getUserData();
+            setUserData(status);
+        };
+
+        getProfileData();
+    }, []);
 
     return (
         <div className="flex justify-center">
