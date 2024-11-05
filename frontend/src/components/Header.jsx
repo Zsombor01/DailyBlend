@@ -29,6 +29,9 @@ const Header = () => {
                 <Link className="px-2 hover:underline decoration-2" to="/weather">
                     Weather
                 </Link>
+                <Link className="px-2 hover:underline decoration-2" to="/movies">
+                    Movies
+                </Link>
             </nav>
             <div className="flex content-center">
                 { auth.loggedIn ? (
