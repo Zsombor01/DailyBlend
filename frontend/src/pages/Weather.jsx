@@ -44,7 +44,7 @@ function Weather() {
             <p className="text-2xl">{data.name}</p>
           </div>
           <div className="temp">
-            {data.main ? <h1 className="text-6xl">{data.main.temp}°C</h1> : null}
+            {data.main ? <h1 className="text-6xl">{data.main.temp.toFixed()}°C</h1> : null}
           </div>
           <div className="description">
             {data.weather ? <p className="bold text-lg font-bold">{data.weather[0].main}</p> : null}
@@ -54,7 +54,7 @@ function Weather() {
         {data.main && (
           <div className="bottom flex justify-evenly text-center w-full my-4 p-4 rounded-lg bg-white/20">
             <div className="feels">
-              {data.main ? <p className="bold text-lg font-bold">{data.main.feels_like}°C</p> : null}
+              {data.main ? <p className="bold text-lg font-bold">{data.main.feels_like.toFixed()}°C</p> : null}
               <p>Feels like</p>
             </div>
             <div className="humidity">
@@ -62,7 +62,7 @@ function Weather() {
               <p>Humidity</p>
             </div>
             <div className="wind">
-              {data.wind ? <p className="bold text-lg font-bold">{data.wind.speed} MPS</p> : null}
+              {data.wind ? <p className="bold text-lg font-bold">{data.wind.speed.toFixed()} MPS</p> : null}
               <p>Wind Speed</p>
             </div>
           </div>
