@@ -1,50 +1,60 @@
 import {useEffect, useState} from "react";
-import moviesImage from './asset/movies.png';
+import axios from "axios";
+
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
+import { MovieFlexbox } from "../components/MovieFlexbox";
+
+const TRENDING_URL = 'https://api.themoviedb.org/3/trending/movie/day' + API_KEY
+const DISCOVER_URL = 'https://api.themoviedb.org/3/discover/movie' + API_KEY
+const POPULAR_URL = 'https://api.themoviedb.org/3/movie/popular' + API_KEY
 
 function Movies() {
-    
-    const [movieList, setMovieList] = useState([])
 
-    const api_key = '?api_key=cd854740906378ad2e1112d0255c444d'
+    const [trendingMovieIdList, setTrendingMovieIdList] = useState([])
+    const [discoverMovieIdList, setDiscoverMovieIdList] = useState([])
+    const [popularMovieIdListm, setPopularMovieIdList] = useState([])
 
-    const movie_url = 'https://api.themoviedb.org/3/movie/';
-    const trending_url = 'https://api.themoviedb.org/3/trending/movie/week' + api_key;
+    const getMovieIdLists = ()=>{
+        axios.get(TRENDING_URL)
+        .then(response => response.data.results)
+        .then(results => results.map(movie => movie.id))
+        .then(ids => setTrendingMovieIdList(ids))
 
-    const getMovie = ()=>{
-        fetch(trending_url)
-        .then(res => res.json())
-        .then(json => setMovieList(json.results))
+        axios.get(DISCOVER_URL)
+        .then(response => response.data.results)
+        .then(results => results.map(movie => movie.id))
+        .then(ids => setDiscoverMovieIdList(ids))
+
+        axios.get(POPULAR_URL)
+        .then(response => response.data.results)
+        .then(results => results.map(movie => movie.id))
+        .then(ids => setPopularMovieIdList(ids))
     }
 
     useEffect(() => {
-        getMovie()
+        getMovieIdLists()
     }, [])
 
     return (
-        <div
-            className="inset-0 bg-cover bg-center z-[-1] py-16"
-            style={{
-                backgroundImage: `url(${moviesImage})`,
-                "backgroundAttachment": "fixed",
-            }}
-        >
-            <div
-                className="flex flex-wrap gap-4 mx-10"
-                style={{
-                    "justifyContent": "center"
-                }}>
-                {movieList.map((movie)=>(
-                    <div className="border-4 border-black"
-                        style={{"maxWidth":"300px"}}>
-                        <p
-                            className="position absolute font-bold text-white pl-2 pt-1"
-                            style={{"textShadow": "0px 0px 8px black"}}>
-                                {movie.title}
-                        </p>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}></img>
-                    </div>
-                ))}
-            </div>
+        <div className="movies-background">
+            <Tabs className="text-white">
+                <TabList>
+                    <Tab>Trending</Tab>
+                    <Tab>Discover</Tab>
+                    <Tab>Popular</Tab>
+                </TabList>
+                <TabPanel>
+                    <MovieFlexbox movieIdList={trendingMovieIdList}></MovieFlexbox>
+                </TabPanel>
+                <TabPanel>
+                    <MovieFlexbox movieIdList={discoverMovieIdList}></MovieFlexbox>
+                </TabPanel>
+                <TabPanel>
+                    <MovieFlexbox movieIdList={popularMovieIdListm}></MovieFlexbox>
+                </TabPanel>
+            </Tabs>
         </div>
     )
 }
