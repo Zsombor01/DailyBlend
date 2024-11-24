@@ -6,10 +6,8 @@ const Home = () => {
   const [time, setTime] = useState({
     hours: "00",
     minutes: "00",
-    seconds: "00",
-    period: "AM"
+    seconds: "00"
   });
-  
   const [greeting, setGreeting] = useState("");
   const [date, setDate] = useState("");
   const [weatherIcon, setWeatherIcon] = useState(<Sun />);
@@ -17,16 +15,11 @@ const Home = () => {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      let hours = now.getHours();
-      const period = hours >= 12 ? "PM" : "AM";
-      hours = hours % 12 || 12;
-      
-      setTime({
-        hours: String(hours).padStart(2, "0"),
-        minutes: String(now.getMinutes()).padStart(2, "0"),
-        seconds: String(now.getSeconds()).padStart(2, "0"),
-        period
-      });
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+
+      setTime({ hours, minutes, seconds });
 
       const hour = now.getHours();
       if (hour < 12) setGreeting("Good Morning");
@@ -62,7 +55,6 @@ const Home = () => {
             Your personal dashboard for the day
           </p>
         </div>
-        
         <div className="flex flex-col justify-center gap-8">
           <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
             <CardContent className="flex justify-center">
@@ -70,9 +62,6 @@ const Home = () => {
                 <div className="font-mono text-5xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                   {time.hours}:{time.minutes}
                   <span className="text-3xl">:{time.seconds}</span>
-                  <span className="text-2xl ml-2 text-gray-600 dark:text-gray-400">
-                    {time.period}
-                  </span>
                 </div>
                 <div className="text-3xl font-medium text-gray-600 dark:text-gray-300">
                   {greeting}!
@@ -80,7 +69,6 @@ const Home = () => {
               </div>
             </CardContent>
           </Card>
-
           <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
             <CardContent>
               <div className="flex items-center justify-center gap-4">
@@ -91,7 +79,6 @@ const Home = () => {
               </div>
             </CardContent>
           </Card>
-
           <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
             <CardContent>
               <div className="flex items-center justify-center gap-4">
