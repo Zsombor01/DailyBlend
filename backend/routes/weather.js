@@ -4,7 +4,6 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
     const { location } = req.query;
-    console.log("location: ", location);
 
     if (!location) {
         return res.status(400).json({ error: "Location is required" });
