@@ -5,7 +5,7 @@ function Movies() {
     
     const [movieList, setMovieList] = useState([])
 
-    const api_key = '?api_key=cd854740906378ad2e1112d0255c444d'
+    const api_key = '?api_key=6109c9822b88c2e58e0ddfcb81d17330'
 
     const movie_url = 'https://api.themoviedb.org/3/movie/';
     const trending_url = 'https://api.themoviedb.org/3/trending/movie/week' + api_key;
