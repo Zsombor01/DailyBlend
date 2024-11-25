@@ -38,6 +38,7 @@ app.use('/logout', ensureAuthenticated, require('./routes/logout.js'));
 app.use('/auth', ensureAuthenticated, require('./routes/authStatus.js'));
 app.use('/profile', ensureAuthenticated, require('./routes/profile.js'));
 
+app.use('/movies', require('./routes/movies.js'));
 
 
 app.get('/', (req, res) => {
