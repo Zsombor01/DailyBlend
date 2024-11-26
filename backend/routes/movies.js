@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
+// Movie by ID API call
 router.get("/", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
     const TMDB_MOVIE_URL = process.env.TMDB_MOVIE_URL
@@ -17,11 +18,12 @@ router.get("/", async (req, res) => {
         const response = await axios.get(url);
         res.json(response.data);
     } catch (err) {
-        res.status(500).json({message: "Failed to fetch movie data"})
+        res.status(500).json({ message: "Failed to fetch movie data" })
         console.error(err);
     }
 });
 
+// Trending movies API call
 router.get("/trending", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
     const TMDB_TRENDING_URL = process.env.TMDB_TRENDING_URL
@@ -32,11 +34,12 @@ router.get("/trending", async (req, res) => {
         const response = await axios.get(url);
         res.json(response.data);
     } catch (err) {
-        res.status(500).json({message: "Failed to fetch trending movie data"})
+        res.status(500).json({ message: "Failed to fetch trending movie data" })
         console.error(err);
     }
 });
 
+// Discover movies API call
 router.get("/discover", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
     const TMDB_DISCOVER_URL = process.env.TMDB_DISCOVER_URL
@@ -47,7 +50,7 @@ router.get("/discover", async (req, res) => {
         const response = await axios.get(url);
         res.json(response.data);
     } catch (err) {
-        res.status(500).json({message: "Failed to fetch discover movie data"})
+        res.status(500).json({ message: "Failed to fetch discover movie data" })
         console.error(err);
     }
 });
