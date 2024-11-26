@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -29,6 +30,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -56,10 +58,12 @@
     --chart-5: 340 75% 55%
   }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -76,6 +80,23 @@
     background-attachment: fixed;
     min-height: 100vh;
   }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list {
+    text-align: center;
+  }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list>.react-tabs__tab {
+    color: white;
+    font-size: x-large;
+    width: 49%;
+    text-align: center;
+    box-shadow: none;
+  }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list>.react-tabs__tab--selected {
+    color: black;
+  }
+
   .movies-flexbox {
     flex-wrap: wrap;
     gap: 4px;
@@ -84,8 +105,9 @@
     justify-content: center;
   }
 }
+
 @layer components {
-  
+
   /* Movies page */
   .movie {
     position: relative;
@@ -95,29 +117,34 @@
     color: white;
     max-width: 300px;
   }
-  .movie > .title {
+
+  .movie>.title {
     position: absolute;
     padding-left: 2px;
     padding-top: 1px;
     text-shadow: 0px 0px 8px black;
     max-width: 300px;
   }
-  .movie > .details {
+
+  .movie>.details {
     position: absolute;
     bottom: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0 ,1) 0%, rgba(0, 0, 0, 0.25) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 100%);
   }
-  .movie > .details > .overview {
+
+  .movie>.details>.overview {
     padding-left: 4px;
     text-shadow: 0px 0px 8px black;
     max-width: 300px;
     font-size: small;
   }
-  .movie > .details > .user-button {
+
+  .movie>.details>.user-button {
     cursor: pointer;
     font-size: x-large;
   }
-  .movie > .details > .link {
+
+  .movie>.details>.link {
     position: absolute;
     right: 0px;
   }

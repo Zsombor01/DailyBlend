@@ -7,9 +7,6 @@ const getUserData = async (user_name) => {
         });
         return response?.data?.movieListData;
     } catch (err) {
-        if (err.response?.status === 401) {
-            window.location.href = '/unauthorized';
-        }
         console.error(err);
     }
 }

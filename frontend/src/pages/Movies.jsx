@@ -1,47 +1,41 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import getTrendingMovieIDs from "../hooks/getTrendingMovieIDs";
+import getDiscoverMovieIDs from "../hooks/getDiscoverMovieIDs";
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 import { MovieFlexbox } from "../components/MovieFlexbox";
 
-const TRENDING_URL = `http://localhost:3333/movies/trending`
-const DISCOVER_URL = `http://localhost:3333/movies/discover`
-
 function Movies() {
 
-    const [trendingMovieIdList, setTrendingMovieIdList] = useState([])
-    const [discoverMovieIdList, setDiscoverMovieIdList] = useState([])
+    const [trendingMovieIDList, setTrendingMovieIDList] = useState([])
+    const [discoverMovieIDList, setDiscoverMovieIDList] = useState([])
 
-    const getMovieIdLists = ()=>{
-        axios.get(TRENDING_URL)
-        .then(response => response.data.results)
-        .then(results => results.map(movie => movie.id))
-        .then(ids => setTrendingMovieIdList(ids))
+    const getMovieIDLists = async ()=>{
+        const trendingIDs = await getTrendingMovieIDs();
+        setTrendingMovieIDList(trendingIDs);
 
-        axios.get(DISCOVER_URL)
-        .then(response => response.data.results)
-        .then(results => results.map(movie => movie.id))
-        .then(ids => setDiscoverMovieIdList(ids))
+        const discoverIDs = await getDiscoverMovieIDs();
+        setDiscoverMovieIDList(discoverIDs);
     }
 
     useEffect(() => {
-        getMovieIdLists()
+        getMovieIDLists()
     }, [])
 
     return (
         <div className="movies-background">
-            <Tabs className="text-white">
+            <Tabs>
                 <TabList>
                     <Tab>Trending</Tab>
                     <Tab>Discover</Tab>
                 </TabList>
                 <TabPanel>
-                    <MovieFlexbox movieIdList={trendingMovieIdList}></MovieFlexbox>
+                    <MovieFlexbox movieIdList={trendingMovieIDList}></MovieFlexbox>
                 </TabPanel>
                 <TabPanel>
-                    <MovieFlexbox movieIdList={discoverMovieIdList}></MovieFlexbox>
+                    <MovieFlexbox movieIdList={discoverMovieIDList}></MovieFlexbox>
                 </TabPanel>
             </Tabs>
         </div>

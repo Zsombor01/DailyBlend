@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import getUserData from "../hooks/getUserData";
+import getMovieData from "../hooks/getMovieData";
 import { MovieListType } from "../../../shared/enums/MovieListType";
 
 const WATCHLIST_CHAR = "🕒"
@@ -16,18 +17,15 @@ const updateMovieList = async (movie_id, list_type) => {
 }
 
 const Movie = ({ movie_id }) => {
-
-    const MOVIE_URL = `http://localhost:3333/movies?movie_id=${movie_id}`;
-
     const [movieData, setMovieData] = useState([])
 
-    const getMovieData = () => {
-        axios.get(MOVIE_URL)
-            .then(response => setMovieData(response.data))
+    const updateMovieData = async () => {
+        const data = await getMovieData(movie_id);
+        setMovieData(data);
     }
 
     useEffect(() => {
-        getMovieData();
+        updateMovieData();
     }, [])
 
     return (
