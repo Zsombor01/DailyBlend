@@ -15,6 +15,7 @@ router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
             return res.status(404).send('User not found')
         }
         const userID = user._id
+
         const movieInList = Boolean(await Movies.exists(
             {
                 userID: userID,
@@ -29,7 +30,10 @@ router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
 
         return res.status(200).send(
             {
-                msg: `Movie [${movieID}] ${movieInList ? "removed from" : "added to"} user [${userName}] ${MovieListType.toString(listType)}`
+                movieID: movieID,
+                userName: userName,
+                listName: MovieListType.toString(listType),
+                action: movieInList ? "Removed" : "Added"
             });
     } catch (error) {
         console.error(error.message)
