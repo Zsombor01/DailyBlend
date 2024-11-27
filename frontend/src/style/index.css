@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -29,6 +30,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -56,20 +58,113 @@
     --chart-5: 340 75% 55%
   }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
-  #weatherContainer{
-    background-image: url("../pages/asset/weather.jpg");
-    background-size: 'cover';
-    background-position: 'center';
-    background-repeat: 'no-repeat';
-    min-height: '100vh';
-    width: '100%';
-    padding: '20px'
+
+  /* Movies page */
+  .movies-background {
+    inset: 0px;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-image: url("../pages/asset/movies.png");
+    background-attachment: fixed;
+    min-height: 100vh;
   }
+
+  .movies-profile>.react-tabs {
+    width: 80vw;
+  }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list,
+  .movies-profile>.react-tabs>.react-tabs__tab-list {
+    display: flex;
+  }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list>.react-tabs__tab,
+  .movies-profile>.react-tabs>.react-tabs__tab-list>.react-tabs__tab {
+    color: white;
+    font-size: x-large;
+    width: 100%;
+    text-align: center;
+  }
+
+  .movies-background>.react-tabs>.react-tabs__tab-list>.react-tabs__tab--selected {
+    color: black;
+  }
+
+  .movies-profile>.react-tabs>.react-tabs__tab-list>.react-tabs__tab {
+    color: black;
+  }
+
+  .movies-flexbox {
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: center;
+  }
+}
+
+@layer components {
+
+  /* Movies page */
+  .movie {
+    position: relative;
+    border-width: 4px;
+    border-color: black;
+    font-weight: bold;
+    color: white;
+    max-width: 300px;
+  }
+
+  .movie>.title {
+    position: absolute;
+    padding-left: 2px;
+    padding-top: 1px;
+    text-shadow: 0px 0px 8px black;
+    max-width: 300px;
+  }
+
+  .movie>.details {
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 100%);
+    text-align: start;
+  }
+
+  .movie>.details>.overview {
+    padding-left: 4px;
+    text-shadow: 0px 0px 8px black;
+    max-width: 300px;
+    font-size: small;
+  }
+
+  .movie>.details>.user-button {
+    cursor: pointer;
+    font-size: x-large;
+  }
+
+  .movie>.details>.link {
+    position: absolute;
+    right: 0px;
+  }
+}
+#weatherContainer{
+  background-image: url("../pages/asset/weather.jpg");
+  background-size: 'cover';
+  background-position: 'center';
+  background-repeat: 'no-repeat';
+  min-height: '100vh';
+  width: '100%';
+  padding: '20px'
 }

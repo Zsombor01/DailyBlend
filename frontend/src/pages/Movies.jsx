@@ -1,50 +1,44 @@
 import {useEffect, useState} from "react";
-import moviesImage from './asset/movies.png';
+import getTrendingMovieIDs from "../hooks/getTrendingMovieIDs";
+import getDiscoverMovieIDs from "../hooks/getDiscoverMovieIDs";
+
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
+import { MovieFlexbox } from "../components/MovieFlexbox";
 
 function Movies() {
     
-    const [movieList, setMovieList] = useState([])
+    const [trendingMovieIDList, setTrendingMovieIDList] = useState([])
+    const [discoverMovieIDList, setDiscoverMovieIDList] = useState([])
 
-    const api_key = '?api_key=6109c9822b88c2e58e0ddfcb81d17330'
 
-    const movie_url = 'https://api.themoviedb.org/3/movie/';
-    const trending_url = 'https://api.themoviedb.org/3/trending/movie/week' + api_key;
+    const getMovieIDLists = async ()=>{
+        const trendingIDs = await getTrendingMovieIDs();
+        setTrendingMovieIDList(trendingIDs);
 
-    const getMovie = ()=>{
-        fetch(trending_url)
-        .then(res => res.json())
-        .then(json => setMovieList(json.results))
+        const discoverIDs = await getDiscoverMovieIDs();
+        setDiscoverMovieIDList(discoverIDs);
     }
 
     useEffect(() => {
-        getMovie()
+        getMovieIDLists()
     }, [])
 
     return (
-        <div
-            className="inset-0 bg-cover bg-center z-[-1] py-16"
-            style={{
-                backgroundImage: `url(${moviesImage})`,
-                "backgroundAttachment": "fixed",
-            }}
-        >
-            <div
-                className="flex flex-wrap gap-4 mx-10"
-                style={{
-                    "justifyContent": "center"
-                }}>
-                {movieList.map((movie)=>(
-                    <div className="border-4 border-black"
-                        style={{"maxWidth":"300px"}}>
-                        <p
-                            className="position absolute font-bold text-white pl-2 pt-1"
-                            style={{"textShadow": "0px 0px 8px black"}}>
-                                {movie.title}
-                        </p>
-                        <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}></img>
-                    </div>
-                ))}
-            </div>
+        <div className="movies-background">
+            <Tabs>
+                <TabList>
+                    <Tab>Trending</Tab>
+                    <Tab>Discover</Tab>
+                </TabList>
+                <TabPanel>
+                    <MovieFlexbox movieIdList={trendingMovieIDList}></MovieFlexbox>
+                </TabPanel>
+                <TabPanel>
+                    <MovieFlexbox movieIdList={discoverMovieIDList}></MovieFlexbox>
+                </TabPanel>
+            </Tabs>
         </div>
     )
 }

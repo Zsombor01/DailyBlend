@@ -20,14 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-  }));
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,16 +37,17 @@ app.use('/login', forwardAuthenticated, require('./routes/login.js'));
 app.use('/logout', ensureAuthenticated, require('./routes/logout.js'));
 app.use('/auth', ensureAuthenticated, require('./routes/authStatus.js'));
 app.use('/profile', ensureAuthenticated, require('./routes/profile.js'));
+app.use('/movies', require('./routes/movies.js'));
 app.use('/weather', require('./routes/weather.js'));
 app.use('/todos', require('./routes/todos.js'));
 
 
 
 app.get('/', (req, res) => {
-    res.send('API is running...');
+  res.send('API is running...');
 })
 
 mongoose.connection.once('open', () => {
-    console.log('MongoDB Connected...');
-    app.listen(PORT, console.log(`Server running on port ${PORT}`));
+  console.log('MongoDB Connected...');
+  app.listen(PORT, console.log(`Server running on port ${PORT}`));
 })

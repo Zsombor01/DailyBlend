@@ -2,29 +2,30 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../model/User');
+const Movies = require('../model/Movies');
 
 router.get('/', (req, res) => {
     res.send('This is the register backend');
 });
 
 router.post('/', async (req, res) => {
-    const {name, email, password, password2} = req.body;
+    const { name, email, password, password2 } = req.body;
     let errors = [];
 
-    if(!name ||!email ||!password ||!password2) {
-        errors.push({msg: 'Please enter all fields'});
+    if (!name || !email || !password || !password2) {
+        errors.push({ msg: 'Please enter all fields' });
     }
 
-    if(password != password2) {
-        errors.push({msg: 'Passwords do not match'});
+    if (password != password2) {
+        errors.push({ msg: 'Passwords do not match' });
     }
 
-    if(password.length < 7) {
-        errors.push({msg: 'Password must be at least 8 characters'});
+    if (password.length < 7) {
+        errors.push({ msg: 'Password must be at least 8 characters' });
     }
 
-    if(errors.length>0){
-        return res.status(400).json({errors});
+    if (errors.length > 0) {
+        return res.status(400).json({ errors });
     } else {
         try {
             const existingUser = await User.findOne({
@@ -49,7 +50,16 @@ router.post('/', async (req, res) => {
 
             const salt = await bcrypt.genSalt(10);
             newUser.password = await bcrypt.hash(password, salt);
-            await newUser.save();
+            const savedUser = await newUser.save();
+
+            const newMovies = new Movies({
+                userID: savedUser._id,
+                watchList: [],
+                favouritesList: [],
+                watchedList: []
+            })
+
+            await newMovies.save();
 
             console.log("Successfully registered user: " + newUser.name);
             return res.status(200).json({ msg: 'User registered successfully' });
