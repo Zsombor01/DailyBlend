@@ -20,12 +20,9 @@ const Header = () => {
 
 
     return (
-        <div className="w-full flex justify-between items-center bg-black text-white text-lg px-6">
+        <div className="w-full flex justify-between items-center bg-black text-white text-lg px-6 sticky top-0 z-50">
             <nav className="flex justify-center gap-6 py-4">
                 <Link to="/" className="font-bold">DailyBlend</Link>
-                <Link className="px-2 hover:underline decoration-2" to="/">
-                    Home
-                </Link>
                 <Link className="px-2 hover:underline decoration-2" to="/weather">
                     Weather
                 </Link>

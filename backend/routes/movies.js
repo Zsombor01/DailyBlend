@@ -3,7 +3,6 @@ const axios = require("axios");
 const router = express.Router();
 const User = require('../model/User');
 const Movies = require('../model/Movies');
-const { MovieListType } = require("../../shared/enums/MovieListType");
 
 // User movies
 router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
@@ -19,20 +18,20 @@ router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
         const movieInList = Boolean(await Movies.exists(
             {
                 userID: userID,
-                [MovieListType.toInternalName(listType)]: { $in: [movieID] }
+                [listType]: { $in: [movieID] }
             }
         ))
 
         await Movies.findOneAndUpdate(
             { userID: userID },
-            { [movieInList ? '$pull' : '$push']: { [MovieListType.toInternalName(listType)]: movieID } }
+            { [movieInList ? '$pull' : '$push']: { [listType]: movieID } }
         )
 
         return res.status(200).send(
             {
                 movieID: movieID,
                 userName: userName,
-                listName: MovieListType.toString(listType),
+                listName: listType,
                 action: movieInList ? "Removed" : "Added"
             });
     } catch (error) {

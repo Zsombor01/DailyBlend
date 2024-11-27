@@ -8,9 +8,10 @@ import 'react-tabs/style/react-tabs.css';
 import { MovieFlexbox } from "../components/MovieFlexbox";
 
 function Movies() {
-
+    
     const [trendingMovieIDList, setTrendingMovieIDList] = useState([])
     const [discoverMovieIDList, setDiscoverMovieIDList] = useState([])
+
 
     const getMovieIDLists = async ()=>{
         const trendingIDs = await getTrendingMovieIDs();
