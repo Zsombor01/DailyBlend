@@ -27,6 +27,7 @@ function Movies() {
 
     return (
         <div className="movies-background">
+            <h1>Movies</h1>
             <Tabs>
                 <TabList>
                     <Tab>Trending</Tab>

@@ -9,7 +9,6 @@ const WATCHED_CHAR = "👁"
 const LINK_CHAR = "🔗"
 
 const updateMovieList = async (movieID, listType) => {
-    // Missing user logged in check
     const user = await getUserData();
     const response = await axios.put(`http://localhost:3333/movies/updateUserData/${user.name}/${listType}/${movieID}`)
     console.log(JSON.stringify(response?.data));
