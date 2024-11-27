@@ -12,7 +12,13 @@ function Weather() {
 
   //Style object for the background
   const containerStyle = {
-
+    backgroundImage: `url(${weatherBg})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '100vh',
+    width: '100%',
+    padding: '20px'
   };
 
   const fetchWeatherData = async () => {
