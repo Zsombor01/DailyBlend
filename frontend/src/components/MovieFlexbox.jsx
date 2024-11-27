@@ -4,8 +4,8 @@ const MovieFlexbox = ({ movieIdList }) => {
     if (movieIdList) {
         return (
             <div className="movies-flexbox flex" >
-                {movieIdList.map((movie_id) => (
-                    <Movie key={movie_id} movie_id={movie_id} />
+                {movieIdList.map((movieID) => (
+                    <Movie key={movieID} movieID={movieID} />
                 ))}
             </div>
         )

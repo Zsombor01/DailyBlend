@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const getUserData = async (user_name) => {
+const getUserData = async (userName) => {
     try {
-        const response = await axios.get(`http://localhost:3333/movies/userData/${user_name}`, {
+        const response = await axios.get(`http://localhost:3333/movies/userData/${userName}`, {
             withCredentials: true,
         });
         return response?.data?.movieListData;

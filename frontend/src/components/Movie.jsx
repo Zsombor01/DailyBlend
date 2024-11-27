@@ -9,18 +9,18 @@ const FAVOURITE_CHAR = "☆"
 const WATCHED_CHAR = "👁"
 const LINK_CHAR = "🔗"
 
-const updateMovieList = async (movie_id, list_type) => {
+const updateMovieList = async (movieID, listType) => {
     // Missing user logged in check
-    // Missing movie is already on list check (remove if its there)
     const user = await getUserData();
-    await axios.put(`http://localhost:3333/movies/updateUserData/${user.name}&${movie_id}&${list_type}`)
+    const response = await axios.put(`http://localhost:3333/movies/updateUserData/${user.name}/${listType}/${movieID}`)
+    console.log(JSON.stringify(response?.data));
 }
 
-const Movie = ({ movie_id }) => {
+const Movie = ({ movieID }) => {
     const [movieData, setMovieData] = useState([])
 
     const updateMovieData = async () => {
-        const data = await getMovieData(movie_id);
+        const data = await getMovieData(movieID);
         setMovieData(data);
     }
 
@@ -34,9 +34,9 @@ const Movie = ({ movie_id }) => {
             <img src={`https://image.tmdb.org/t/p/w500${movieData?.poster_path}`} />
             <div className="details invisible group-hover:visible">
                 <p className="overview"> {movieData?.overview} </p>
-                <input className="user-button" type="button" value={`${WATCHLIST_CHAR}`} alt="Watchlist" title="Add to watchlist" onClick={() => { updateMovieList(movie_id, MovieListType.WATCHLIST) }} />
-                <input className="user-button" type="button" value={`${FAVOURITE_CHAR}`} alt="Favourite" title="Add to favourites" onClick={() => { updateMovieList(movie_id, MovieListType.FAVOURITE) }} />
-                <input className="user-button" type="button" value={`${WATCHED_CHAR}`} alt="Watched" title="Add to watched" onClick={() => { updateMovieList(movie_id, MovieListType.WATCHED) }} />
+                <input className="user-button" type="button" value={`${WATCHLIST_CHAR}`} alt="Watchlist" title="Add to watchlist" onClick={() => { updateMovieList(movieID, MovieListType.WATCHLIST) }} />
+                <input className="user-button" type="button" value={`${FAVOURITE_CHAR}`} alt="Favourite" title="Add to favourites" onClick={() => { updateMovieList(movieID, MovieListType.FAVOURITE) }} />
+                <input className="user-button" type="button" value={`${WATCHED_CHAR}`} alt="Watched" title="Add to watched" onClick={() => { updateMovieList(movieID, MovieListType.WATCHED) }} />
                 <a className="user-button link" alt="IMDB link" title="IMDB link" href={`https://www.imdb.com/title/${movieData?.imdb_id}`}>{`${LINK_CHAR}`}</a>
             </div>
         </div>

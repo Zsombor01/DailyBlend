@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getTrendingMovieIDs = async (user_name) => {
+const getTrendingMovieIDs = async () => {
     try {
         const list = await axios.get(`http://localhost:3333/movies/trending`)
             .then(response => response.data.results)

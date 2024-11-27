@@ -6,50 +6,48 @@ const Movies = require('../model/Movies');
 const { MovieListType } = require("../../shared/enums/MovieListType");
 
 // User movies
-router.put('/updateUserData/:user_name&:movie_id&:list_type', async (req, res) => {
-    const user_name = req.params.user_name
-    const movie_id = req.params.movie_id
-    const list_type = req.params.list_type
+router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
+    const { userName, listType, movieID } = req.params;
 
     try {
-        const user = await User.findOne({ name: user_name })
+        const user = await User.findOne({ name: userName })
         if (!user) {
             return res.status(404).send('User not found')
         }
-        const user_id = user._id
+        const userID = user._id
+        const movieInList = Boolean(await Movies.exists(
+            {
+                userID: userID,
+                [MovieListType.toInternalName(listType)]: { $in: [movieID] }
+            }
+        ))
 
-        if (list_type == MovieListType.WATCHLIST) {
-            await Movies.findOneAndUpdate(
-                { userID: user_id }, { $push: { watchList: movie_id } }
-            )
-        } else if (list_type == MovieListType.FAVOURITE) {
-            await Movies.findOneAndUpdate(
-                { userID: user_id }, { $push: { favouritesList: movie_id } }
-            )
-        } else if (list_type == MovieListType.WATCHED) {
-            await Movies.findOneAndUpdate(
-                { userID: user_id }, { $push: { watchedList: movie_id } }
-            )
-        }
+        await Movies.findOneAndUpdate(
+            { userID: userID },
+            { [movieInList ? '$pull' : '$push']: { [MovieListType.toInternalName(listType)]: movieID } }
+        )
 
-        res.status(200).send({ message: 'Item added' });
+        return res.status(200).send(
+            {
+                msg: `Movie [${movieID}] ${movieInList ? "removed from" : "added to"} user [${userName}] ${MovieListType.toString(listType)}`
+            });
     } catch (error) {
         console.error(error.message)
         res.status(500).send('Internal Server Error')
     }
 });
 
-router.get('/userData/:user_name', async (req, res) => {
-    const user_name = req.params.user_name
+router.get('/userData/:userName', async (req, res) => {
+    const userName = req.params.userName
 
     try {
-        const user = await User.findOne({ name: user_name })
+        const user = await User.findOne({ name: userName })
         if (!user) {
             return res.status(404).send('User not found')
         }
 
-        const user_id = user._id
-        const movies = await Movies.findOne({ userID: user_id })
+        const userID = user._id
+        const movies = await Movies.findOne({ userID: userID })
         if (!movies) {
             return res.status(404).send('Movies not found')
         }
@@ -65,13 +63,13 @@ router.get('/userData/:user_name', async (req, res) => {
 router.get("/", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
     const TMDB_MOVIE_URL = process.env.TMDB_MOVIE_URL
-    const { movie_id } = req.query
+    const { movieID } = req.query
 
-    if (!movie_id) {
+    if (!movieID) {
         return res.status(400).json({ error: "Movie ID is required" })
     }
 
-    const url = `${TMDB_MOVIE_URL}${movie_id}${TMDB_API_KEY}`;
+    const url = `${TMDB_MOVIE_URL}${movieID}${TMDB_API_KEY}`;
 
     try {
         const response = await axios.get(url);
