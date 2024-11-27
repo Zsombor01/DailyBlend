@@ -1,98 +1,146 @@
 import { useState, useEffect } from "react";
 import { CalendarDays, Sun, Moon, Cloud, CloudRain } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import useTodo from "../hooks/useTodo";
 
 const Home = () => {
-  const [time, setTime] = useState({
-    hours: "00",
-    minutes: "00",
-    seconds: "00"
-  });
-  const [greeting, setGreeting] = useState("");
-  const [date, setDate] = useState("");
-  const [weatherIcon, setWeatherIcon] = useState(<Sun />);
+    const { todos, addTodo, toggleTodo, deleteTodo, todoInput, setTodoInput } = useTodo();
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      const seconds = String(now.getSeconds()).padStart(2, "0");
+    const [time, setTime] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00",
+    });
+    const [greeting, setGreeting] = useState("");
+    const [date, setDate] = useState("");
+    const [weatherIcon, setWeatherIcon] = useState(<Sun />);
 
-      setTime({ hours, minutes, seconds });
+    useEffect(() => {
+        const updateTime = () => {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, "0");
+            const minutes = String(now.getMinutes()).padStart(2, "0");
+            const seconds = String(now.getSeconds()).padStart(2, "0");
 
-      const hour = now.getHours();
-      if (hour < 12) setGreeting("Good Morning");
-      else if (hour < 17) setGreeting("Good Afternoon");
-      else setGreeting("Good Evening");
+            setTime({ hours, minutes, seconds });
 
-      if (hour < 6) setWeatherIcon(<Moon className="h-8 w-8" />);
-      else if (hour < 12) setWeatherIcon(<Sun className="h-8 w-8" />);
-      else if (hour < 17) setWeatherIcon(<Cloud className="h-8 w-8" />);
-      else setWeatherIcon(<CloudRain className="h-8 w-8" />);
+            const hour = now.getHours();
+            if (hour < 12) setGreeting("Good Morning");
+            else if (hour < 17) setGreeting("Good Afternoon");
+            else setGreeting("Good Evening");
 
-      setDate(now.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }));
-    };
+            if (hour < 6) setWeatherIcon(<Moon className="h-8 w-8" />);
+            else if (hour < 12) setWeatherIcon(<Sun className="h-8 w-8" />);
+            else if (hour < 17) setWeatherIcon(<Cloud className="h-8 w-8" />);
+            else setWeatherIcon(<CloudRain className="h-8 w-8" />);
 
-    const timer = setInterval(updateTime, 1000);
-    updateTime();
-    return () => clearInterval(timer);
-  }, []);
+            setDate(
+                now.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                })
+            );
+        };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-[6rem] font-bold text-blue-600 dark:text-blue-400">
-            DailyBlend
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            Your personal dashboard for the day
-          </p>
+        const timer = setInterval(updateTime, 1000);
+        updateTime();
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-8">
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-12">
+                    <h1 className="text-[6rem] font-bold text-blue-600 dark:text-blue-400">
+                        DailyBlend
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-300">
+                        Your personal dashboard for the day
+                    </p>
+                </div>
+                <div className="flex flex-col justify-center gap-8">
+                    <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
+                        <CardContent className="flex justify-center">
+                            <div className="text-center">
+                                <div className="font-mono text-5xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                                    {time.hours}:{time.minutes}
+                                    <span className="text-3xl">:{time.seconds}</span>
+                                </div>
+                                <div className="text-3xl font-medium text-gray-600 dark:text-gray-300">
+                                    {greeting}!
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
+                        <CardContent>
+                            <div className="flex items-center justify-center gap-4">
+                                <CalendarDays className="h-8 w-8 text-blue-500" />
+                                <div className="text-2xl font-medium text-gray-700 dark:text-gray-200">
+                                    {date}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
+                        <CardContent>
+                            <h3 className="text-2xl font-medium text-gray-700 dark:text-gray-200 mb-4">
+                                To-Do List
+                            </h3>
+                            <div className="flex gap-4 mb-4">
+                                <input
+                                    type="text"
+                                    className="flex-1 p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50"
+                                    placeholder="New task..."
+                                    value={todoInput}
+                                    onChange={(e) => setTodoInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && addTodo()}
+                                />
+                                <button
+                                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                                    onClick={addTodo}
+                                >
+                                    Add
+                                </button>
+                            </div>
+                            <div className="space-y-2">
+                                {todos.map((todo) => (
+                                    <div
+                                        key={todo._id}
+                                        className="flex items-center justify-between p-2 bg-white/30 dark:bg-gray-700/30 rounded-lg"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={todo.done}
+                                                onChange={() => toggleTodo(todo._id)}
+                                                className="w-4 h-4"
+                                            />
+                                            <span
+                                                className={`${
+                                                    todo.done ? "line-through text-gray-500" : ""
+                                                }`}
+                                            >
+                                                {todo.text}
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={() => deleteTodo(todo._id)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </div>
-        <div className="flex flex-col justify-center gap-8">
-          <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
-            <CardContent className="flex justify-center">
-              <div className="text-center">
-                <div className="font-mono text-5xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                  {time.hours}:{time.minutes}
-                  <span className="text-3xl">:{time.seconds}</span>
-                </div>
-                <div className="text-3xl font-medium text-gray-600 dark:text-gray-300">
-                  {greeting}!
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
-            <CardContent>
-              <div className="flex items-center justify-center gap-4">
-                <CalendarDays className="h-8 w-8 text-blue-500" />
-                <div className="text-2xl font-medium text-gray-700 dark:text-gray-200">
-                  {date}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="p-6 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm shadow-md">
-            <CardContent>
-              <div className="flex items-center justify-center gap-4">
-                {weatherIcon}
-                <div className="text-xl font-medium text-gray-700 dark:text-gray-200">
-                  Weather Preview
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Home;

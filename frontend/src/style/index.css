@@ -64,3 +64,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+#weatherContainer{
+  background-image: url("../pages/asset/weather.jpg");
+  background-size: 'cover';
+  background-position: 'center';
+  background-repeat: 'no-repeat';
+  min-height: '100vh';
+  width: '100%';
+  padding: '20px'
+}
