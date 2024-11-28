@@ -46,11 +46,12 @@ const Profile = () => {
         <div className="flex justify-center">
             <div className="flex flex-col items-center w-full max-w-3xl">
                 <h1 className="flex justify-center text-[4rem] mt-5 mb-7">{userData?.name}</h1>
-                <Avatar className="w-64 h-64 mb-32">
+                <Avatar className="w-64 h-64 mb-16">
                     <AvatarImage src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="movies-profile">
+                    <h1 className="flex justify-center text-[4rem] font-bold mb-6">Movies</h1>
                     <Tabs>
                         <TabList>
                             <Tab>Watchlist</Tab>
