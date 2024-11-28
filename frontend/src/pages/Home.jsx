@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { CalendarDays, Sun, Moon, Cloud, CloudRain } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import useTodo from "../hooks/useTodo";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
