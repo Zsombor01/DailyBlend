@@ -1,34 +1,33 @@
-const request = require('supertest');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../server');
-const Todo = require('../model/Todo');
-const User = require('../model/User');
+const request = require("supertest");
+const express = require("express");
+const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const Todo = require("../model/Todo");
+const todosRouter = require("../routes/todos");
+
+// Mock user data
+const mockUser = {
+    id: new mongoose.Types.ObjectId(),
+    email: "testuser@example.com",
+    name: "Test User",
+};
+
+// Mock authentication middleware
+jest.mock("../config/auth", () => ({
+    ensureAuthenticated: (req, res, next) => {
+        req.user = mockUser;
+        next();
+    },
+}));
+
+// Setup Express app for testing
+const app = express();
+app.use(express.json());
+app.use("/todos", todosRouter);
 
 let mongoServer;
 
-// Mock user for authentication
-const mockUser = {
-    _id: new mongoose.Types.ObjectId(),
-    name: 'Test User',
-    email: 'test@test.com',
-    password: 'password123',
-    date: new Date()
-};
-
-// Mock authenticated request
-const mockAuthenticatedUser = (req, res, next) => {
-    req.user = mockUser;
-    next();
-};
-
-// Mock the auth middleware
-jest.mock('../config/auth', () => ({
-    ensureAuthenticated: (req, res, next) => mockAuthenticatedUser(req, res, next)
-}));
-
 beforeAll(async () => {
-    // Set up MongoDB Memory Server
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri);
@@ -40,130 +39,105 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-    // Clear the database before each test
     await Todo.deleteMany({});
 });
 
-describe('Todo Routes', () => {
-    describe('GET /', () => {
-        it('should get all todos for the current user', async () => {
-            // Create test todos
-            await Todo.create([
-                { text: 'Test todo 1', user: mockUser._id },
-                { text: 'Test todo 2', user: mockUser._id },
-                { text: 'Other user todo', user: new mongoose.Types.ObjectId() }
-            ]);
+describe("Todos API", () => {
+    let todo1, todo2, otherUserTodo;
 
-            const response = await request(app)
-                .get('/todos')
-                .expect(200);
+    beforeEach(async () => {
+        // Create test data before each test
+        todo1 = await Todo.create({ text: "Todo 1", user: mockUser.id });
+        todo2 = await Todo.create({ text: "Todo 2", user: mockUser.id });
+        otherUserTodo = await Todo.create({
+            text: "Other user's todo",
+            user: new mongoose.Types.ObjectId(),
+        });
+    });
 
+    describe("GET /todos", () => {
+        it("should return all todos for the authenticated user", async () => {
+            const response = await request(app).get("/todos");
+
+            expect(response.status).toBe(200);
             expect(response.body).toHaveLength(2);
-            expect(response.body[0].text).toBe('Test todo 1');
-            expect(response.body[1].text).toBe('Test todo 2');
+
+            const todoTexts = response.body.map((todo) => todo.text);
+            expect(todoTexts).toContain("Todo 1");
+            expect(todoTexts).toContain("Todo 2");
         });
     });
 
-    describe('POST /', () => {
-        it('should create a new todo', async () => {
-            const todoData = { text: 'New todo' };
+    describe("POST /todos", () => {
+        it("should create a new todo for the authenticated user", async () => {
+            const newTodoText = "New Todo";
+            const response = await request(app).post("/todos").send({ text: newTodoText });
 
-            const response = await request(app)
-                .post('/todos')
-                .send(todoData)
-                .expect(201);
-
-            expect(response.body.text).toBe(todoData.text);
+            expect(response.status).toBe(201);
+            expect(response.body.text).toBe(newTodoText);
             expect(response.body.done).toBe(false);
-            expect(response.body.user.toString()).toBe(mockUser._id.toString());
+            expect(response.body.user).toBe(mockUser.id.toString());
 
-            // Verify it's in the database
-            const todo = await Todo.findById(response.body._id);
-            expect(todo).toBeTruthy();
-            expect(todo.text).toBe(todoData.text);
+            const todoInDB = await Todo.findById(response.body._id);
+            expect(todoInDB).not.toBeNull();
+            expect(todoInDB.text).toBe(newTodoText);
         });
 
-        it('should return 400 if text is missing', async () => {
-            await request(app)
-                .post('/todos')
-                .send({})
-                .expect(400);
+        it("should return 400 if text is missing", async () => {
+            const response = await request(app).post("/todos").send({});
+            expect(response.status).toBe(400);
+            expect(response.body.message).toBeDefined();
         });
     });
 
-    describe('PATCH /:id', () => {
-        it('should toggle todo status', async () => {
-            const todo = await Todo.create({
-                text: 'Test todo',
-                user: mockUser._id,
-                done: false
-            });
+    describe("PATCH /todos/:id", () => {
+        it("should toggle the done status of a todo", async () => {
+            const response = await request(app).patch(`/todos/${todo1._id}`);
 
-            const response = await request(app)
-                .patch(`/todos/${todo._id}`)
-                .expect(200);
-
+            expect(response.status).toBe(200);
             expect(response.body.done).toBe(true);
 
-            // Verify in database
-            const updatedTodo = await Todo.findById(todo._id);
+            const updatedTodo = await Todo.findById(todo1._id);
             expect(updatedTodo.done).toBe(true);
         });
 
-        it('should return 404 if todo not found', async () => {
+        it("should return 404 if the todo is not found", async () => {
             const fakeId = new mongoose.Types.ObjectId();
-            await request(app)
-                .patch(`/todos/${fakeId}`)
-                .expect(404);
+            const response = await request(app).patch(`/todos/${fakeId}`);
+
+            expect(response.status).toBe(404);
+            expect(response.body.message).toBe("Todo not found");
         });
 
-        it('should return 404 if todo belongs to different user', async () => {
-            const otherUser = new mongoose.Types.ObjectId();
-            const todo = await Todo.create({
-                text: 'Other user todo',
-                user: otherUser,
-                done: false
-            });
-
-            await request(app)
-                .patch(`/todos/${todo._id}`)
-                .expect(404);
+        it("should return 404 if the todo does not belong to the user", async () => {
+            const response = await request(app).patch(`/todos/${otherUserTodo._id}`);
+            expect(response.status).toBe(404);
+            expect(response.body.message).toBe("Todo not found");
         });
     });
 
-    describe('DELETE /:id', () => {
-        it('should delete a todo', async () => {
-            const todo = await Todo.create({
-                text: 'Test todo',
-                user: mockUser._id
-            });
+    describe("DELETE /todos/:id", () => {
+        it("should delete a todo owned by the authenticated user", async () => {
+            const response = await request(app).delete(`/todos/${todo1._id}`);
+            expect(response.status).toBe(200);
+            expect(response.body.message).toBe("Todo deleted");
 
-            await request(app)
-                .delete(`/todos/${todo._id}`)
-                .expect(200);
-
-            // Verify it's deleted from database
-            const deletedTodo = await Todo.findById(todo._id);
-            expect(deletedTodo).toBeNull();
+            const todoInDB = await Todo.findById(todo1._id);
+            expect(todoInDB).toBeNull();
         });
 
-        it('should return 404 if todo not found', async () => {
+        it("should return 404 if the todo is not found", async () => {
             const fakeId = new mongoose.Types.ObjectId();
-            await request(app)
-                .delete(`/todos/${fakeId}`)
-                .expect(404);
+            const response = await request(app).delete(`/todos/${fakeId}`);
+
+            expect(response.status).toBe(404);
+            expect(response.body.message).toBe("Todo not found");
         });
 
-        it('should return 404 if todo belongs to different user', async () => {
-            const otherUser = new mongoose.Types.ObjectId();
-            const todo = await Todo.create({
-                text: 'Other user todo',
-                user: otherUser
-            });
-
-            await request(app)
-                .delete(`/todos/${todo._id}`)
-                .expect(404);
+        it("should return 404 if the todo does not belong to the user", async () => {
+            const response = await request(app).delete(`/todos/${otherUserTodo._id}`);
+            expect(response.status).toBe(404);
+            expect(response.body.message).toBe("Todo not found");
         });
     });
 });
