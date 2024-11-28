@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { CalendarDays, Sun, Moon, Cloud, CloudRain } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import useTodo from "../hooks/useTodo";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
     const { todos, addTodo, toggleTodo, deleteTodo, todoInput, setTodoInput } = useTodo();
@@ -139,6 +141,19 @@ const Home = () => {
                     </Card>
                 </div>
             </div>
+            <ToastContainer
+                position="top-center"
+                autoClose={4000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition:Bounce
+            />
         </div>
     );
 };
