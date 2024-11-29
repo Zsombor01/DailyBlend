@@ -22,7 +22,7 @@ const updateMovieList = async (movieID, listType) => {
         );
 
         toast.success(
-            `Movie successfully added to the ${
+            `Movie successfully ${response?.data?.action} to the ${
                 listType === "favouritesList"
                     ? "favourites list"
                     : listType === "watchedList"

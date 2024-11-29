@@ -36,7 +36,7 @@ router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
                 movieID: movieID,
                 userName: userName,
                 listName: listType,
-                action: movieInList ? "Removed" : "Added"
+                action: movieInList ? "removed" : "added"
             });
     } catch (error) {
         console.error(error.message)
