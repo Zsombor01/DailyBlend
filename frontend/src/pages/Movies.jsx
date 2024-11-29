@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import getTrendingMovieIDs from "../hooks/getTrendingMovieIDs";
-import getDiscoverMovieIDs from "../hooks/getDiscoverMovieIDs";
+import getTrendingMovieIDs from "../hooks/movies/getTrendingMovieIDs";
+import getDiscoverMovieIDs from "../hooks/movies/getDiscoverMovieIDs";
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -30,6 +30,7 @@ function Movies() {
 
     return (
         <div className="movies-background">
+            <h1>Movies</h1>
             <Tabs>
                 <TabList>
                     <Tab>Trending</Tab>

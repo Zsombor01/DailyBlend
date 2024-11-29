@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import getUserData from "../hooks/getUserData";
-import getMovieData from "../hooks/getMovieData";
+import getMovieData from "../hooks/movies/getMovieData";
 import { toast } from "react-toastify";
 
 const WATCHLIST_CHAR = "🕒";

@@ -4,7 +4,7 @@ import useLogout from "../hooks/useLogout";
 import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import getUserData from "../hooks/getUserData";
-import getUserMovieData from "../hooks/getUserMovieData";
+import getUserMovieData from "../hooks/movies/getUserMovieData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MovieFlexbox } from "@/components/MovieFlexbox";
 
