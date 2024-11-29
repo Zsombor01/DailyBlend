@@ -4,6 +4,10 @@ const router = express.Router();
 const User = require('../model/User');
 const Movies = require('../model/Movies');
 
+const TMDB_MOVIE_URL = "https://api.themoviedb.org/3/movie/"
+const TMDB_TRENDING_URL = "https://api.themoviedb.org/3/trending/movie/week"
+const TMDB_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie"
+
 // User movies
 router.put('/updateUserData/:userName/:listType/:movieID', async (req, res) => {
     const { userName, listType, movieID } = req.params;
@@ -65,7 +69,6 @@ router.get('/userData/:userName', async (req, res) => {
 // Movie by ID API call
 router.get("/", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
-    const TMDB_MOVIE_URL = process.env.TMDB_MOVIE_URL
     const { movieID } = req.query
 
     if (!movieID) {
@@ -86,7 +89,6 @@ router.get("/", async (req, res) => {
 // Trending movies API call
 router.get("/trending", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
-    const TMDB_TRENDING_URL = process.env.TMDB_TRENDING_URL
 
     const url = `${TMDB_TRENDING_URL}${TMDB_API_KEY}`;
 
@@ -102,7 +104,6 @@ router.get("/trending", async (req, res) => {
 // Discover movies API call
 router.get("/discover", async (req, res) => {
     const TMDB_API_KEY = process.env.TMDB_API_KEY
-    const TMDB_DISCOVER_URL = process.env.TMDB_DISCOVER_URL
 
     const url = `${TMDB_DISCOVER_URL}${TMDB_API_KEY}`;
 
