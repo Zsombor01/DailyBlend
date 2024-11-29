@@ -6,6 +6,9 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 import { MovieFlexbox } from "../components/MovieFlexbox";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function Movies() {
     
@@ -40,6 +43,19 @@ function Movies() {
                     <MovieFlexbox movieIdList={discoverMovieIDList}></MovieFlexbox>
                 </TabPanel>
             </Tabs>
+            <ToastContainer
+                position="top-center"
+                autoClose={4000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition:Bounce
+            />
         </div>
     )
 }
