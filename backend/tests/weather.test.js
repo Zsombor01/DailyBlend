@@ -24,6 +24,15 @@ describe('Weather API', () => {
         ]
     };
 
+    // Mock console.error to avoid cluttering test output
+    beforeAll(() => {
+        jest.spyOn(console, 'error').mockImplementation(() => { });
+    });
+
+    afterAll(() => {
+        console.error.mockRestore();
+    });
+
     describe('GET /weather/current', () => {
         it('should return current weather for a valid location', async () => {
             axios.get.mockResolvedValueOnce({ data: mockWeatherData });
