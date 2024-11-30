@@ -80,9 +80,9 @@ router.get("/", async (req, res) => {
     try {
         const response = await axios.get(url);
         res.json(response.data);
-    } catch (err) {
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Failed to fetch movie data" })
-        console.error(err);
     }
 });
 
@@ -95,9 +95,9 @@ router.get("/trending", async (req, res) => {
     try {
         const response = await axios.get(url);
         res.json(response.data);
-    } catch (err) {
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Failed to fetch trending movie data" })
-        console.error(err);
     }
 });
 
@@ -110,9 +110,9 @@ router.get("/discover", async (req, res) => {
     try {
         const response = await axios.get(url);
         res.json(response.data);
-    } catch (err) {
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Failed to fetch discover movie data" })
-        console.error(err);
     }
 });
 
