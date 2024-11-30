@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import getTrendingMovieIDs from "../hooks/movies/getTrendingMovieIDs";
 import getDiscoverMovieIDs from "../hooks/movies/getDiscoverMovieIDs";
 
@@ -9,14 +9,17 @@ import { MovieFlexbox } from "../components/MovieFlexbox";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { Helmet } from 'react-helmet';
+import moviesIcon from './asset/icons/movies.ico';
+
 
 function Movies() {
-    
+
     const [trendingMovieIDList, setTrendingMovieIDList] = useState([])
     const [discoverMovieIDList, setDiscoverMovieIDList] = useState([])
 
 
-    const getMovieIDLists = async ()=>{
+    const getMovieIDLists = async () => {
         const trendingIDs = await getTrendingMovieIDs();
         setTrendingMovieIDList(trendingIDs);
 
@@ -30,6 +33,10 @@ function Movies() {
 
     return (
         <div className="movies-background">
+            <Helmet>
+                <link rel="icon" type="image/ico" href={moviesIcon} sizes="32x32" />
+                <title>DailyBlend - Movies</title>
+            </Helmet>
             <h1>Movies</h1>
             <Tabs>
                 <TabList>

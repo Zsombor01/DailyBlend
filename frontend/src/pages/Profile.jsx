@@ -7,6 +7,8 @@ import getUserData from "../hooks/getUserData";
 import getUserMovieData from "../hooks/movies/getUserMovieData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MovieFlexbox } from "@/components/MovieFlexbox";
+import { Helmet } from 'react-helmet';
+import homeIcon from './asset/icons/home.ico';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -44,6 +46,10 @@ const Profile = () => {
 
     return (
         <div className="flex justify-center">
+            <Helmet>
+                <link rel="icon" type="image/ico" href={homeIcon} sizes="32x32" />
+                <title>DailyBlend - Profile</title>
+            </Helmet>
             <div className="flex flex-col items-center w-full max-w-3xl">
                 <h1 className="flex justify-center text-[4rem] mt-5 mb-7">{userData?.name}</h1>
                 <Avatar className="w-64 h-64 mb-16">

@@ -6,6 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import useAuth from '../hooks/useAuth';
 
+import { Helmet } from 'react-helmet';
+import homeIcon from './asset/icons/home.ico';
+
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
@@ -13,7 +16,7 @@ import { Button } from "../components/ui/button";
 const Login = () => {
     const userInputRef = useRef();
     const errRef = useRef();
-    const { setAuth} = useAuth();
+    const { setAuth } = useAuth();
     const location = useLocation();
 
     const [userInput, setUserInput] = useState("");
@@ -47,7 +50,7 @@ const Login = () => {
             console.log(response?.data);
 
             if (response?.data?.msg == "Login successful") {
-                setAuth({loggedIn: true});
+                setAuth({ loggedIn: true });
                 navigate("/");
             }
 
@@ -75,22 +78,25 @@ const Login = () => {
                 }
             }
         };
-        
-        if(location.pathname.includes('/login') || location.pathname.includes('/profile')){
+
+        if (location.pathname.includes('/login') || location.pathname.includes('/profile')) {
             checkAuthStatus();
         }
     }, [location.pathname]);
 
     return (
         <div className="flex flex-col justify-center items-center min-h-screen p-4 bg-white font-sans text-black text-lg">
+            <Helmet>
+                <link rel="icon" type="image/ico" href={homeIcon} sizes="32x32" />
+                <title>DailyBlend - Login</title>
+            </Helmet>
             <section className="w-full max-w-md min-h-[400px] flex flex-col justify-start px-4 py-6 bg-black bg-opacity-40 rounded-lg">
                 <p
                     ref={errRef}
-                    className={`${
-                        errMsg
-                            ? "bg-pink-200 text-red-700 font-bold p-2 mb-1 rounded-lg"
-                            : "hidden"
-                    }`}
+                    className={`${errMsg
+                        ? "bg-pink-200 text-red-700 font-bold p-2 mb-1 rounded-lg"
+                        : "hidden"
+                        }`}
                     aria-live="assertive"
                 >
                     {errMsg}
@@ -159,6 +165,7 @@ const Login = () => {
                 transition:Bounce
             />
         </div>
+
     );
 };
 

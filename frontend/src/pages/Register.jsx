@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useRef, useState, useEffect } from 'react';
-import {faCheck, faTimes, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast, ToastContainer } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,10 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
+import { Helmet } from 'react-helmet';
+import homeIcon from './asset/icons/home.ico';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const EMAIL_REGEX =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const REGISTER_URL = '/register';
 
 const Register = () => {
@@ -75,14 +77,14 @@ const Register = () => {
 		}
 		try {
 			const response = await axios.post('http://localhost:3333/register', {
-                name: user,
-                email: email,
-                password: pwd,
-                password2: matchPwd
-            },
-            {
-                withCredentials: true
-            });
+				name: user,
+				email: email,
+				password: pwd,
+				password2: matchPwd
+			},
+				{
+					withCredentials: true
+				});
 
 			console.log(JSON.stringify(response?.data));
 
@@ -104,12 +106,15 @@ const Register = () => {
 
 	return (
 		<div className='flex flex-col justify-center items-center min-h-screen p-4 bg-white font-sans text-black text-lg'>
+			<Helmet>
+				<link rel="icon" type="image/ico" href={homeIcon} sizes="32x32" />
+				<title>DailyBlend - Register</title>
+			</Helmet>
 			<section className='w-full max-w-md min-h-[400px] flex flex-col justify-start px-4 py-6 bg-black bg-opacity-40 rounded-lg'>
 				<p
 					ref={errRef}
-					className={`${
-						errMsg ? 'bg-pink-200 text-red-700 font-bold p-2 mb-1 rounded-lg' : 'hidden'
-					}`}
+					className={`${errMsg ? 'bg-pink-200 text-red-700 font-bold p-2 mb-1 rounded-lg' : 'hidden'
+						}`}
 					aria-live='assertive'
 				>
 					{errMsg}
@@ -127,9 +132,8 @@ const Register = () => {
 						/>
 						<FontAwesomeIcon
 							icon={faTimes}
-							className={`ml-1 ${
-								validName || !user ? 'hidden' : 'text-red-600'
-							}`}
+							className={`ml-1 ${validName || !user ? 'hidden' : 'text-red-600'
+								}`}
 						/>
 					</Label>
 					<Input
@@ -148,9 +152,8 @@ const Register = () => {
 					/>
 					<p
 						id='uidnote'
-						className={`text-sm bg-black text-white p-1 rounded-lg relative -bottom-2 ${
-							userFocus && user && !validName ? 'block' : 'hidden'
-						}`}
+						className={`text-sm bg-black text-white p-1 rounded-lg relative -bottom-2 ${userFocus && user && !validName ? 'block' : 'hidden'
+							}`}
 					>
 						<FontAwesomeIcon icon={faInfoCircle} className='mr-1' />
 						4 to 24 characters.
@@ -168,9 +171,8 @@ const Register = () => {
 						/>
 						<FontAwesomeIcon
 							icon={faTimes}
-							className={`ml-1 ${
-								validEmail || !email ? 'hidden' : 'text-red-500'
-							}`}
+							className={`ml-1 ${validEmail || !email ? 'hidden' : 'text-red-500'
+								}`}
 						/>
 					</Label>
 					<Input
@@ -213,9 +215,8 @@ const Register = () => {
 					/>
 					<p
 						id='pwdnote'
-						className={`text-[0.8rem] bg-black px-2 text-white rounded-lg relative -bottom-2 ${
-							pwdFocus && !validPwd ? 'block' : 'hidden'
-						}`}
+						className={`text-[0.8rem] bg-black px-2 text-white rounded-lg relative -bottom-2 ${pwdFocus && !validPwd ? 'block' : 'hidden'
+							}`}
 					>
 						<FontAwesomeIcon icon={faInfoCircle} className='mr-1' />
 						8 to 24 characters.
@@ -235,15 +236,13 @@ const Register = () => {
 						Confirm Password:
 						<FontAwesomeIcon
 							icon={faCheck}
-							className={`ml-1 ${
-								validMatch && matchPwd ? 'text-green-500' : 'hidden'
-							}`}
+							className={`ml-1 ${validMatch && matchPwd ? 'text-green-500' : 'hidden'
+								}`}
 						/>
 						<FontAwesomeIcon
 							icon={faTimes}
-							className={`ml-1 ${
-								validMatch || !matchPwd ? 'hidden' : 'text-red-500'
-							}`}
+							className={`ml-1 ${validMatch || !matchPwd ? 'hidden' : 'text-red-500'
+								}`}
 						/>
 					</Label>
 					<Input
@@ -260,9 +259,8 @@ const Register = () => {
 					/>
 					<p
 						id='confirmnote'
-						className={`text-[0.8rem] bg-black text-white px-2 rounded-lg relative -bottom-2 ${
-							matchFocus && !validMatch ? 'block' : 'hidden'
-						}`}
+						className={`text-[0.8rem] bg-black text-white px-2 rounded-lg relative -bottom-2 ${matchFocus && !validMatch ? 'block' : 'hidden'
+							}`}
 					>
 						<FontAwesomeIcon icon={faInfoCircle} className='mr-1' />
 						Must match the first password input field.
@@ -271,7 +269,7 @@ const Register = () => {
 					<Button
 						disabled={!validName || !validPwd || !validMatch}
 						className='mt-5'
-						>
+					>
 						Sign Up
 					</Button>
 				</form>

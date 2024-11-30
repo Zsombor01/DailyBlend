@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import weatherBg from "./asset/weather.jpg";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { Helmet } from 'react-helmet';
+import weatherIcon from './asset/icons/weather.ico';
 
 function Weather() {
     const [location, setCity] = useState("");
@@ -53,6 +55,10 @@ function Weather() {
             id="weatherContainer"
             className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-8"
         >
+            <Helmet>
+                <link rel="icon" type="image/ico" href={weatherIcon} sizes="32x32" />
+                <title>DailyBlend - Weather</title>
+            </Helmet>
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-[6rem] font-bold text-red-600 dark:text-red-400">

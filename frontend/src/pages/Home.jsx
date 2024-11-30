@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import useTodo from "../hooks/useTodo";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Helmet } from 'react-helmet';
+import homeIcon from './asset/icons/home.ico';
 
 const Home = () => {
     const { todos, addTodo, toggleTodo, deleteTodo, todoInput, setTodoInput } = useTodo();
@@ -18,6 +20,8 @@ const Home = () => {
     const [weatherIcon, setWeatherIcon] = useState(<Sun />);
 
     useEffect(() => {
+
+
         const updateTime = () => {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, "0");
@@ -53,6 +57,10 @@ const Home = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-8">
+            <Helmet>
+                <link rel="icon" type="image/ico" href={homeIcon} sizes="32x32" />
+                <title>DailyBlend</title>
+            </Helmet>
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-[6rem] font-bold text-blue-600 dark:text-blue-400">
@@ -121,9 +129,8 @@ const Home = () => {
                                                 className="w-4 h-4"
                                             />
                                             <span
-                                                className={`${
-                                                    todo.done ? "line-through text-gray-500" : ""
-                                                }`}
+                                                className={`${todo.done ? "line-through text-gray-500" : ""
+                                                    }`}
                                             >
                                                 {todo.text}
                                             </span>
