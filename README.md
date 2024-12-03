@@ -44,7 +44,7 @@ This project is a full-stack web application built using **React**, **Express.js
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/Zsombor01/DailyBlend/
-   cd project-name
+   cd DailyBlend
    ```
 
 2. **Install Dependencies:**
