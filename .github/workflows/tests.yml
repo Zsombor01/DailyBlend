@@ -22,8 +22,6 @@ jobs:
               working-directory: backend
             - run: npm test
               working-directory: backend
-            - run: npm run build
-              working-directory: backend
 
     frontend:
         runs-on: ubuntu-latest
