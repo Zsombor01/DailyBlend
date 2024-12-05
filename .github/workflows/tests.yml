@@ -9,14 +9,34 @@ on:
             - main
 
 jobs:
-    test:
+    backend:
         runs-on: ubuntu-latest
         container:
             image: node:20
         steps:
             - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
               with:
-                    node-version: 20
+                  node-version: 20
             - run: npm ci
+              working-directory: backend
             - run: npm test
+              working-directory: backend
             - run: npm run build
+              working-directory: backend
+
+    frontend:
+        runs-on: ubuntu-latest
+        container:
+            image: node:20
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 20
+            - run: npm ci
+              working-directory: frontend
+            - run: npm test
+              working-directory: frontend
+            - run: npm run build
+              working-directory: frontend
