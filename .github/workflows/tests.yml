@@ -1,32 +1,22 @@
-name: Unit tests
+name: Test Project
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: "00 12 * * *"
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-  tests:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-        dir: [backend]
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: npm install
-      run: npm ci
-    - name: tests
-      run: npm test
+    test:
+        runs-on: ubuntu-latest
+        container:
+            image: node:20
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                    node-version: 20
+            - run: npm ci
+            - run: npm test
+            - run: npm run build
