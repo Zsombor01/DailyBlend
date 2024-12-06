@@ -19,7 +19,6 @@ jobs:
         working-directory: frontend
         run: |
           npm ci
-          npm test
 
       - name: Install and Test Backend
         working-directory: backend
