@@ -1,0 +1,46 @@
+name: Deploy Project
+
+on: 
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        container:
+            image: node:20
+        steps:
+            # Checkout Repository
+            - uses: actions/checkout@v3
+
+            # Deploy Frontend
+            - name: Install and Build Frontend
+              working-directory: frontend
+              run: |
+                npm ci
+                npm run build
+
+            - name: Deploy Frontend
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{ secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+                scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./frontend/build/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/
+
+            # Deploy Backend
+            - name: Install and Build Backend
+              working-directory: backend
+              run: |
+                npm ci
+                npm run build || echo "No build step for backend, skipping."
+
+            - name: Deploy Backend
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{ secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+                scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./backend/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node-app
+
+            # Restart Backend Server
+            - name: Restart Backend Server
+              run: |
+                ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/node-app && npm install && pm2 restart all"

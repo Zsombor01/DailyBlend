@@ -9,7 +9,7 @@ const useTodo = () => {
     useEffect(() => {
         const fetchTodos = async () => {
             try {
-                const response = await axios.get("http://localhost:3333/todos", {
+                const response = await axios.get("http://13.60.12.85/todos", {
                     withCredentials: true,
                 });
                 setTodos(response.data);
@@ -28,7 +28,7 @@ const useTodo = () => {
         if (todoInput.trim()) {
             try {
                 const response = await axios.post(
-                    "http://localhost:3333/todos",
+                    "http://13.60.12.85/todos",
                     { text: todoInput },
                     { withCredentials: true }
                 );
@@ -44,7 +44,7 @@ const useTodo = () => {
     const toggleTodo = async (id) => {
         try {
             const response = await axios.patch(
-                `http://localhost:3333/todos/${id}`,
+                `http://13.60.12.85/todos/${id}`,
                 {},
                 { withCredentials: true }
             );
@@ -56,7 +56,7 @@ const useTodo = () => {
 
     const deleteTodo = async (id) => {
         try {
-            await axios.delete(`http://localhost:3333/todos/${id}`, {
+            await axios.delete(`http://13.60.12.85/todos/${id}`, {
                 withCredentials: true,
             });
             setTodos(todos.filter((todo) => todo._id !== id));

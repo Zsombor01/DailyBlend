@@ -32,8 +32,8 @@ function Weather() {
 
         try {
             const [currentResponse, forecastResponse] = await Promise.all([
-                axios.get(`http://localhost:3333/weather/current?location=${location}`),
-                axios.get(`http://localhost:3333/weather/forecast?location=${location}`),
+                axios.get(`http://13.60.12.85/weather/current?location=${location}`),
+                axios.get(`http://13.60.12.85/weather/forecast?location=${location}`),
             ]);
 
             setCurrentWeather(currentResponse.data);

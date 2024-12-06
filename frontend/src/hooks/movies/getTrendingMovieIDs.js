@@ -3,7 +3,9 @@ import { toast } from "react-toastify";
 
 const getTrendingMovieIDs = async () => {
     try {
-        const list = await axios.get(`http://localhost:3333/movies/trending`)
+        const list = await axios.get(`http://13.60.12.85/movies/trending`, {
+            withCredentials: true
+        })
             .then(response => response.data.results)
             .then(results => results.map(movie => movie.id))
         return list;

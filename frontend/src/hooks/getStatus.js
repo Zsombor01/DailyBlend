@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getStatus = async () => {
     try {
-        const response = await axios.get('http://localhost:3333/auth/status', {
+        const response = await axios.get('http://13.60.12.85/auth/status', {
             withCredentials: true,
         });
         return {loggedIn: true, ...response.data};

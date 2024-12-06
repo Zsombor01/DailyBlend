@@ -5,6 +5,7 @@ const passport = require('passport');
 const session = require('express-session');
 const connectDB = require('./config/connectDB');
 const cors = require('cors');
+const MongoStore = require('connect-mongo');
 const corsOptions = require('./config/corsOptions');
 const { forwardAuthenticated, ensureAuthenticated } = require('./config/auth.js');
 const PORT = process.env.PORT || 3000;
@@ -20,12 +21,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(session({
-  secret: 'your-secret-key',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+    ttl: 14 * 24 * 60 * 60,
+    autoRemove: 'native',
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    httpOnly: true,                               
+    maxAge: 24 * 60 * 60 * 1000                    
   }
 }));
 
