@@ -43,8 +43,8 @@ app.use('/login', forwardAuthenticated, require('./routes/login.js'));
 app.use('/logout', ensureAuthenticated, require('./routes/logout.js'));
 app.use('/auth', ensureAuthenticated, require('./routes/authStatus.js'));
 app.use('/profile', ensureAuthenticated, require('./routes/profile.js'));
-app.use('/movies', require('./routes/movies.js'));
-app.use('/weather', require('./routes/weather.js'));
+app.use('/movies', ensureAuthenticated, require('./routes/movies.js'));
+app.use('/weather', ensureAuthenticated, require('./routes/weather.js'));
 app.use('/todos', require('./routes/todos.js'));
 
 
