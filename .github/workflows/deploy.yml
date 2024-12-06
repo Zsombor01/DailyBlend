@@ -1,46 +1,62 @@
-name: Deploy Project
+name: CI/CD Pipeline
 
-on: 
-    push:
-        branches:
-            - main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        container:
-            image: node:20
-        steps:
-            # Checkout Repository
-            - uses: actions/checkout@v3
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
 
-            # Deploy Frontend
-            - name: Install and Build Frontend
-              working-directory: frontend
-              run: |
-                npm ci
-                npm run build
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-            - name: Deploy Frontend
-              run: |
-                mkdir -p ~/.ssh
-                echo "${{ secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-                scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./frontend/build/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/
+      - name: Install and Build Frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+          cd ..
 
-            # Deploy Backend
-            - name: Install and Build Backend
-              working-directory: backend
-              run: |
-                npm ci
-                npm run build || echo "No build step for backend, skipping."
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        shell: bash
 
-            - name: Deploy Backend
-              run: |
-                mkdir -p ~/.ssh
-                echo "${{ secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-                scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./backend/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node-app
+      - name: Deploy Frontend
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r frontend/dist/* ${{ secrets.SSH_USER }}@${{ secrets.FRONTEND_HOST }}:/var/www/html/frontend
+        shell: bash
 
-            # Restart Backend Server
-            - name: Restart Backend Server
-              run: |
-                ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ~/node-app && npm install && pm2 restart all"
+      - name: Restart Frontend Service
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.FRONTEND_HOST }} "sudo systemctl restart frontend"
+        shell: bash
+
+      - name: Deploy Backend
+        run: |
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r backend/* ${{ secrets.SSH_USER }}@${{ secrets.BACKEND_HOST }}:/home/ubuntu/app/backend
+        shell: bash
+
+      - name: Restart Backend Service
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.BACKEND_HOST }} "sudo systemctl restart backend"
+        shell: bash
