@@ -18,7 +18,9 @@ const updateMovieList = async (movieID, listType) => {
 
         const user = await getUserData();
         const response = await axios.put(
-            `http://13.60.12.85/movies/updateUserData/${user.name}/${listType}/${movieID}`
+            `http://13.60.12.85/movies/updateUserData/${user.name}/${listType}/${movieID}`,
+            {},
+            { withCredentials: true }
         );
 
         toast.success(
